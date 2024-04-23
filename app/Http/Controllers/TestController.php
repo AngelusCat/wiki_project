@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -26,11 +27,6 @@ class TestController extends Controller
 
         // Сделать проверку: найдена статья или нет, если нет, то сообщить об этом пользователю, иначе продолжить
         // обработку
-
-        /*$test = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
-        $testOne = $test['query']['pages'];
-        $key = array_key_last($testOne);
-        $test = $test['query']['pages'][$key]['extract'];*/
 
         $articleContent = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
         $pages = $articleContent['query']['pages'];
@@ -64,7 +60,7 @@ class TestController extends Controller
         $link = 'https://ru.wikipedia.org/wiki/' . $titles;
 
         //Разбить текст статьи на слова-атомы
-        $wordsAtoms = preg_split('/[^а-яёА-ЯЁ0-9]+/u', $articleContent, -1, PREG_SPLIT_NO_EMPTY);
+        $wordsAtoms = preg_split('/[^а-яёА-ЯЁ0-9a-zA-Z]+/u', $articleContent, -1, PREG_SPLIT_NO_EMPTY);
 
         //Посчитать размер
         $size = 0;
@@ -81,7 +77,15 @@ class TestController extends Controller
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
 
         //Посчитать количество слов в статье
-        $numberOfWordsInArticle = array_sum($wordsAtoms);
+        $numberOfWordsInArticle = array_sum($numberOfOccurrencesOfWord);
+
+        $article = new Article();
+        $article->title = $titles;
+        $article->link = $link;
+        $article->size = $size;
+        $article->word_count = $numberOfWordsInArticle;
+        $article->content = $articleContent;
+        $article->save();
 
         /**
          * exlimit
