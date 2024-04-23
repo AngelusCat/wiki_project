@@ -42,12 +42,15 @@ class TestController extends Controller
             "я́" => "я"
         ];
 
-        dump(preg_replace('/(А́|а́|Е́|е́|И́|и́|О́|о́|У́|у́|Ы́|ы́|Э́|э́|Ю́|ю́|Я́|я́)/u', '*$0*', $test));
+        //dump(preg_replace('/(А́|а́|Е́|е́|И́|и́|О́|о́|У́|у́|Ы́|ы́|Э́|э́|Ю́|ю́|Я́|я́)/u', '*$0*', $test));
 
         //Посчитать количество вхождений слова-атома в тексте статьи
         $result = mb_substr_count($test, 'от', 'utf8');
 
-        dump($test);
+        //Заменяет буквы с ударением на их аналоги без ударения
+        $test2 = strtr($test, $replaceArray);
+
+        dump($test2);
 
         /**
          * exlimit
