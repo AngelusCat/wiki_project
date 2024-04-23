@@ -50,7 +50,13 @@ class TestController extends Controller
         //Заменяет буквы с ударением на их аналоги без ударения
         $test2 = strtr($test, $replaceArray);
 
-        dump($test2);
+        //Разбить текст статьи на слова-атомы
+        $test3 = preg_split('/[^а-яёА-ЯЁ0-9]+/u', $test2, -1, PREG_SPLIT_NO_EMPTY);
+
+        //Посчитать количество вхождений каждого слова-атома
+        $test4 = array_count_values($test3);
+
+        dump($test4);
 
         /**
          * exlimit
@@ -71,6 +77,8 @@ class TestController extends Controller
          * [^а-яёА-ЯЁ0-9]+
          * (А́|а́|Е́|е́|И́|и́|О́|о́|У́|у́|Ы́|ы́|Э́|э́|Ю́|ю́|Я́|я́)
          */
+
+        //http://www.mysql.ru/docs/man/Using_InnoDB_tables.html
 
         //https://www.mediawiki.org/wiki/API:Get_the_contents_of_a_page
         //https://www.mediawiki.org/wiki/Extension:TextExtracts#API
