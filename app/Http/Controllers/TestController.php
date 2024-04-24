@@ -162,4 +162,29 @@ class TestController extends Controller
         //https://www.mediawiki.org/wiki/API:Get_the_contents_of_a_page
         //https://www.mediawiki.org/wiki/Extension:TextExtracts#API
     }
+
+    public function showSearch(): View
+    {
+        return view('search');
+    }
+
+    public function searchForm(Request $request): void
+    {
+        $query = $request->all()['query'];
+        $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
+        foreach ($wordIds as $wordId) {
+            $test = Communication::query()->where('word_id', '=', $wordId->id)->get(['article_id', 'number_of_occurrences'])->all();
+            foreach ($test as $item) {
+                $articleIds[$item->article_id] = $item->number_of_occurrences;
+            }
+        }
+        arsort($articleIds);
+        foreach ($articleIds as $articleId => $numberOfOccurrences) {
+            $test2 = Article::query()->where('id', '=', $articleId)->get('title')->all();
+            foreach ($test2 as $item) {
+                $articleTitles[] = $item->title;
+            }
+        }
+    }
+
 }
