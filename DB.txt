@@ -5,12 +5,12 @@ link VARCHAR(100) NOT NULL,
 size INT UNSIGNED NOT NULL,
 word_count INT UNSIGNED NOT NULL,
 content MEDIUMTEXT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE words_atoms (
 id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
 word VARCHAR(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE communications (
 article_id INT UNSIGNED NOT NULL,
@@ -18,4 +18,4 @@ word_id INT UNSIGNED PRIMARY KEY NOT NULL,
 number_of_occurrences INT UNSIGNED NOT NULL,
 FOREIGN KEY (article_id) REFERENCES articles (id),
 FOREIGN KEY (word_id) REFERENCES words_atoms (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

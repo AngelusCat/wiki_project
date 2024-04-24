@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Communication;
+use App\Models\WordAtom;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class TestController extends Controller
 {
     public function index()
     {
+        $query = "Достоевский, Фёдор Михайлович";
+        $titles = str_replace(' ', '_', $query);
 
-        $titles = "Достоевский,_Фёдор_Михайлович";
+        if (Article::query()->where('title', '=', $query)->count() !== 0) {
+            echo 'Статья с этим названием уже скопирована.';
+            die;
+        }
 
         //Пробелы в названии заменять нижнем подчеркиванием
 
@@ -76,16 +84,45 @@ class TestController extends Controller
         //Посчитать количество вхождений каждого слова-атома
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
 
+        //Убрать повторяющиеся значения в массиве со словами-атомами
+        $wordsAtoms = array_unique($wordsAtoms);
+
+        $wordsAtoms = array_values($wordsAtoms);
+
         //Посчитать количество слов в статье
         $numberOfWordsInArticle = array_sum($numberOfOccurrencesOfWord);
 
-        $article = new Article();
-        $article->title = $titles;
-        $article->link = $link;
-        $article->size = $size;
-        $article->word_count = $numberOfWordsInArticle;
-        $article->content = $articleContent;
-        $article->save();
+        $numberOfOccurrencesOfWord = array_values($numberOfOccurrencesOfWord);
+
+        try {
+            DB::beginTransaction();
+            $article = new Article();
+            $article->title = $query;
+            $article->link = $link;
+            $article->size = $size;
+            $article->word_count = $numberOfWordsInArticle;
+            $article->content = $articleContent;
+            $article->save();
+
+            $wordIds = array_map(function (string $word) {
+                $wordAtom = new WordAtom();
+                $wordAtom->word = $word;
+                $wordAtom->save();
+                return $wordAtom->id;
+            }, $wordsAtoms);
+
+            for ($i = 0; $i < count($wordIds); $i++) {
+                $communication = new Communication();
+                $communication->article_id = $article->id;
+                $communication->word_id = $wordIds[$i];
+                $communication->number_of_occurrences = $numberOfOccurrencesOfWord[$i];
+                $communication->save();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dump($e->getMessage());
+        }
 
         /**
          * exlimit
