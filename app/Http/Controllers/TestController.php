@@ -187,4 +187,23 @@ class TestController extends Controller
         }
     }
 
+    //https://learn.javascript.ru/fetch
+    //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //https://habr.com/ru/articles/14246/
+    //https://metanit.com/web/javascript/13.1.php
+    //http://javascript.ru/ajax/intro
+    //https://codepen.io/turngait/post/ajax-js
+    //https://metanit.com/web/javascript/13.2.php
+    //https://developer.mozilla.org/ru/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
+
+    public function showTest(): View
+    {
+        return view('test');
+    }
+
+    public function test()
+    {
+        return 'Ok';
+    }
+
 }
