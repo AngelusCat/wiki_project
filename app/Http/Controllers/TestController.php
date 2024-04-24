@@ -18,7 +18,7 @@ class TestController extends Controller
     }
     public function store(Request $request): void
     {
-        $query = $request->all()['articleName'];
+        $query = trim($request->all()['articleName']);
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
@@ -44,6 +44,12 @@ class TestController extends Controller
         $articleContent = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
         $pages = $articleContent['query']['pages'];
         $key = array_key_last($pages);
+
+        if (!array_key_exists('extract', $pages[$key])) {
+            dump('API не нашло статью');
+            die;
+        }
+
         $articleContent = $pages[$key]['extract'];
 
         $replacementArray = [
@@ -73,7 +79,7 @@ class TestController extends Controller
         $link = 'https://ru.wikipedia.org/wiki/' . $titles;
 
         //Разбить текст статьи на слова-атомы
-        $wordsAtoms = preg_split('/[^а-яёА-ЯЁ0-9a-zA-Z]+/u', $articleContent, -1, PREG_SPLIT_NO_EMPTY);
+        $wordsAtoms = preg_split('/[^а-яёА-ЯЁ0-9a-zA-Z]+/u', mb_strtolower($articleContent), -1, PREG_SPLIT_NO_EMPTY);
 
         //Посчитать размер
         $size = 0;
@@ -82,9 +88,9 @@ class TestController extends Controller
             $size += strlen($word);
         }
 
-        $kbyte = 1024;
+        //$kbyte = 1024;
 
-        $size = (int) round($size/$kbyte);
+        //$size = (int) round($size/$kbyte);
 
         //Посчитать количество вхождений каждого слова-атома
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
