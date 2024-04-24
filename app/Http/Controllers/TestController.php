@@ -8,12 +8,17 @@ use App\Models\WordAtom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\View\View;
 
 class TestController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $query = "Достоевский, Фёдор Михайлович";
+        return view('index');
+    }
+    public function store(Request $request): void
+    {
+        $query = $request->all()['articleName'];
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {

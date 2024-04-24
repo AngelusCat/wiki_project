@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('article_id');
             $table->unsignedBigInteger('word_id');
             $table->primary('word_id');
+            $table->unsignedInteger('number_of_occurrences');
             $table->foreign('article_id')->references('id')->on('articles');
             $table->foreign('word_id')->references('id')->on('words_atoms');
             $table->engine('InnoDB');
