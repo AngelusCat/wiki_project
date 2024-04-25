@@ -18,6 +18,7 @@ class TestController extends Controller
     }
     public function store(Request $request): ?View
     {
+        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
         if ($request->method() === 'GET') {
             return view('index');
@@ -139,6 +140,8 @@ class TestController extends Controller
             DB::rollBack();
             dump($e->getMessage());
         }
+
+        return view('index', compact('articles'));
 
         /**
          * exlimit

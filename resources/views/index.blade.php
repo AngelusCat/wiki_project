@@ -18,5 +18,15 @@
             body: params
         });
     </script>
+    <div>
+        @if(isset($articles))
+        @foreach($articles as $article)
+            <p>Название: {{$article->title}}</p>
+            <p>Ссылка: {{$article->link}}</p>
+            <p>Размер: {{$article->size}}</p>
+            <p>Количество слов: {{$article->word_count}}</p>
+        @endforeach
+        @endif
+    </div>
 </body>
 </html>
