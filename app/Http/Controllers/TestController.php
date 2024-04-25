@@ -18,10 +18,9 @@ class TestController extends Controller
     }
     public function store(Request $request): ?View
     {
-        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
-
         if ($request->method() === 'GET') {
-            return view('index');
+            $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
+            return view('index', compact('articles'));
         }
 
         $query = trim($request->all()['articleName']);
