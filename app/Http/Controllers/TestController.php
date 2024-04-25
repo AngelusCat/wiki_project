@@ -25,6 +25,12 @@ class TestController extends Controller
         }
 
         $query = trim($request->all()['articleName']);
+
+        if (empty($query)) {
+            echo 'Ничего не передано';
+            die;
+        }
+
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
@@ -140,6 +146,8 @@ class TestController extends Controller
             DB::rollBack();
             dump($e->getMessage());
         }
+
+        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
         return view('index', compact('articles'));
 
