@@ -116,6 +116,16 @@ class TestController extends Controller
 
         $numberOfOccurrencesOfWord = array_values($numberOfOccurrencesOfWord);
 
+        //Получить максимальный id в таблице words_atoms до вставки новых записей
+        $oldMaxId = WordAtom::query()->count();
+
+        //Быть готовым к тому, что oldMaxId может быть 0
+
+        foreach ($wordsAtoms as $word) {
+            $line = $word . PHP_EOL;
+            file_put_contents('C:\localhost\dbInsert\wordsAtoms.txt', $line, FILE_APPEND);
+        }
+
         try {
             DB::beginTransaction();
             $article = new Article();
@@ -126,12 +136,12 @@ class TestController extends Controller
             $article->content = $articleContent;
             $article->save();
 
-            $wordIds = array_map(function (string $word) {
-                $wordAtom = new WordAtom();
-                $wordAtom->word = $word;
-                $wordAtom->save();
-                return $wordAtom->id;
-            }, $wordsAtoms);
+            DB::raw("LOAD DATA INFILE C:\localhost\dbInsert\wordsAtoms.txt [IGNORE] INTO TABLE words_atoms [(word)]");
+
+            //Получить максимальный id в таблице words_atoms после вставки новых записей
+            $newMaxId = WordAtom::query()->count();
+            
+            die;
 
             for ($i = 0; $i < count($wordIds); $i++) {
                 $communication = new Communication();
