@@ -16,8 +16,13 @@ class TestController extends Controller
     {
         return view('index');
     }
-    public function store(Request $request): void
+    public function store(Request $request): ?View
     {
+
+        if ($request->method() === 'GET') {
+            return view('index');
+        }
+
         $query = trim($request->all()['articleName']);
         $titles = str_replace(' ', '_', $query);
 

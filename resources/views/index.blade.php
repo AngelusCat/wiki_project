@@ -13,7 +13,7 @@
     <script>
         var form = document.getElementById('form');
         var params = new FormData(form);
-        fetch('/articles', {
+        fetch('/', {
             method: 'POST',
             body: params
         });
