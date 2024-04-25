@@ -44,7 +44,7 @@ class TestController extends Controller
         $articleContent = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
         $pages = $articleContent['query']['pages'];
         $key = array_key_last($pages);
-        
+
         if (!array_key_exists('extract', $pages[$key]) || $pages[$key]['extract'] === '') {
             dump('API не нашло статью');
             die;
@@ -193,8 +193,6 @@ class TestController extends Controller
     //http://javascript.ru/ajax/intro
     //https://codepen.io/turngait/post/ajax-js
     //https://developer.mozilla.org/ru/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
-    //https://qna.habr.com/q/576205
-    //https://qna.habr.com/q/138983
 
     public function showTest(): View
     {

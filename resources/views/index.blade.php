@@ -5,10 +5,18 @@
     <title>Home</title>
 </head>
 <body>
-    <form action="/articles" method="POST">
+    <form method="POST" id="form">
         @csrf
         <input type="text" name="articleName">
         <input type="submit" value="Скопировать">
     </form>
+    <script>
+        var form = document.getElementById('form');
+        var params = new FormData(form);
+        fetch('/articles', {
+            method: 'POST',
+            body: params
+        });
+    </script>
 </body>
 </html>
