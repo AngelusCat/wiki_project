@@ -16,5 +16,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-error.log
 access.log
+error.log
