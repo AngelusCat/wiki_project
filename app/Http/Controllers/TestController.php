@@ -119,11 +119,9 @@ class TestController extends Controller
         //Получить максимальный id в таблице words_atoms до вставки новых записей
         $oldMaxId = WordAtom::query()->count();
 
-        //Быть готовым к тому, что oldMaxId может быть 0
-
         foreach ($wordsAtoms as $word) {
-            $line = $word . PHP_EOL;
-            file_put_contents('C:\localhost\dbInsert\wordsAtoms.txt', $line, FILE_APPEND);
+            $line = "\t" . $word . "\n";
+            file_put_contents('C:\ProgramData\MySQL\MySQL Server 8.1\Uploads\wordsAtoms.txt', $line, FILE_APPEND);
         }
 
         try {
@@ -136,25 +134,27 @@ class TestController extends Controller
             $article->content = $articleContent;
             $article->save();
 
-            DB::raw("LOAD DATA INFILE C:\localhost\dbInsert\wordsAtoms.txt [IGNORE] INTO TABLE words_atoms [(word)]");
+            DB::statement("LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.1/Uploads/wordsAtoms.txt' IGNORE INTO TABLE words_atoms (id, word)");
 
             //Получить максимальный id в таблице words_atoms после вставки новых записей
             $newMaxId = WordAtom::query()->count();
-            
-            die;
 
-            for ($i = 0; $i < count($wordIds); $i++) {
-                $communication = new Communication();
-                $communication->article_id = $article->id;
-                $communication->word_id = $wordIds[$i];
-                $communication->number_of_occurrences = $numberOfOccurrencesOfWord[$i];
-                $communication->save();
+            for ($i = $oldMaxId+1, $a = 0; $i <= $newMaxId, $a < count($numberOfOccurrencesOfWord); $i++, $a++) {
+                $line = $article->id . "\t" . $i . "\t" . $numberOfOccurrencesOfWord[$a] . "\n";
+                file_put_contents('C:\ProgramData\MySQL\MySQL Server 8.1\Uploads\communications.txt', $line, FILE_APPEND);
             }
+            DB::statement("LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.1/Uploads/communications.txt' IGNORE INTO TABLE communications (article_id, word_id, number_of_occurrences)");
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             dump($e->getMessage());
         }
+
+        unlink('C:\ProgramData\MySQL\MySQL Server 8.1\Uploads\wordsAtoms.txt');
+        unlink('C:\ProgramData\MySQL\MySQL Server 8.1\Uploads\communications.txt');
+
+        DB::statement("ALTER TABLE words_atoms AUTO_INCREMENT = $newMaxId");
 
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
