@@ -19,7 +19,13 @@
     {
         div.innerHTML = '<p>New content</p>';
     }
-    button.addEventListener('click', changeContent);
+    button.addEventListener('click', function () {
+        let promise = fetch('/test2');
+        promise.then(response => {
+            let promise2 = response.json();
+            alert(promise2);
+        });
+    });
 </script>
 </body>
 </html>
