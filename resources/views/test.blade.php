@@ -4,12 +4,22 @@
     <title>Document</title>
 </head>
 <body>
-    <input type="submit" value="Импорт статей" id="test">
-    <input type="submit" value="Поиск">
+    <button id="myButton">
+        Click me!
+    </button>
+    <div id="myDiv">
+        <p>
+            Old content
+        </p>
+    </div>
 <script>
-    test.onclick = function() {
-        alert('Ok');
-    };
+    const button = document.getElementById('myButton');
+    const div = document.getElementById('myDiv');
+    function changeContent()
+    {
+        div.innerHTML = '<p>New content</p>';
+    }
+    button.addEventListener('click', changeContent);
 </script>
 </body>
 </html>
