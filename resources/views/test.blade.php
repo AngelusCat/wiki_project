@@ -1,12 +1,15 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Test</title>
+    <title>Document</title>
 </head>
 <body>
-    <script>
-
-    </script>
+    <input type="submit" value="Импорт статей" id="test">
+    <input type="submit" value="Поиск">
+<script>
+    test.onclick = function() {
+        alert('Ok');
+    };
+</script>
 </body>
 </html>

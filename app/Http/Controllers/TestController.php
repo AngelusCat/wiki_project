@@ -12,10 +12,6 @@ use Illuminate\View\View;
 
 class TestController extends Controller
 {
-    public function index(): View
-    {
-        return view('index');
-    }
     public function store(Request $request): ?View
     {
         if ($request->method() === 'GET') {
@@ -212,21 +208,20 @@ class TestController extends Controller
         }
     }
 
+    public function test(): View
+    {
+        return view('test');
+    }
+
+    public function test2(): View
+    {
+        return view('test2');
+    }
+
     //https://learn.javascript.ru/fetch
     //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     //https://habr.com/ru/articles/14246/
     //http://javascript.ru/ajax/intro
     //https://codepen.io/turngait/post/ajax-js
     //https://developer.mozilla.org/ru/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
-
-    public function showTest(): View
-    {
-        return view('test');
-    }
-
-    public function test()
-    {
-        return 'Ok';
-    }
-
 }
