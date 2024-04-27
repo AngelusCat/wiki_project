@@ -4,6 +4,17 @@
     <input type="submit" value="Скопировать">
 </form>
 <br><br>
+
+<div style="background-color: #cbd5e0">
+<p>Импорт завершен.</p>
+<br>
+<p>Найдена статья по адресу: </p>
+<p>Время обработки: </p>
+<p>Размер статьи: </p>
+<p>Количество слов</p>
+</div>
+<br><br>
+
 <script>
     var form = document.getElementById('form');
     var params = new FormData(form);
@@ -14,12 +25,6 @@
 </script>
 <div>
     @if(isset($articles))
-{{--        @foreach($articles as $article)
-            <p>Название: {{$article->title}}</p>
-            <p>Ссылка: {{$article->link}}</p>
-            <p>Размер: {{$article->size}}</p>
-            <p>Количество слов: {{$article->word_count}}</p>
-        @endforeach--}}
         <table border="5">
             <thead>
                 <tr>
