@@ -1,3 +1,1 @@
-main -> ajax -> ajax2 -> file -> ajax3 -> view
-
-view2 - ветка, которую нужно удалить
+main -> ajax -> ajax2 -> file -> ajax3 -> view -> view2
