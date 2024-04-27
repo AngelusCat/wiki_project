@@ -12,15 +12,14 @@ use Illuminate\View\View;
 
 class TestController extends Controller
 {
-    public function clean(): View
+    public function search(): View
     {
-        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
-        return view('clean', compact('articles'));
+        return view('wiki.search2');
     }
-    public function index(): View
+    public function import(): View
     {
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
-        return view('index', compact('articles'));
+        return view('wiki.import2', compact('articles'));
     }
     public function store(Request $request): ?View
     {
@@ -210,6 +209,8 @@ class TestController extends Controller
         if (empty($query)) {
             return 'Ничего не передано';
         }
+
+        //Сделать проверку, что если нет такого слова в БД, то прекратить поиск
 
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
         foreach ($wordIds as $wordId) {

@@ -16,14 +16,14 @@
         const div = document.getElementById('content');
 
         buttonImport.addEventListener('click', function () {
-            fetch('/').then(function (response) {
+            fetch('/import').then(function (response) {
                 response.text().then(function (text) {
                     div.innerHTML = text;
                 });
             });
         });
         buttonSearch.addEventListener('click', function () {
-            fetch('/search').then(function (response) {
+            fetch('/showSearch').then(function (response) {
                 response.text().then(function (text) {
                     div.innerHTML = text;
                 });
