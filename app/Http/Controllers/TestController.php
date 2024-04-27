@@ -26,7 +26,7 @@ class TestController extends Controller
     {
         if ($request->method() === 'GET') {
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
-            return view('clean', compact('articles'));
+            return view('wiki.import', compact('articles'));
         }
 
         $query = trim($request->all()['articleName']);
@@ -164,7 +164,7 @@ class TestController extends Controller
 
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
-        return view('clean', compact('articles'));
+        return view('wiki.import', compact('articles'));
 
         /**
          * exlimit
@@ -194,14 +194,23 @@ class TestController extends Controller
         //https://www.mediawiki.org/wiki/Extension:TextExtracts#API
     }
 
-    public function showSearch(): View
+/*    public function showSearch(): View
     {
         return view('search');
-    }
+    }*/
 
-    public function searchForm(Request $request): void
+    public function searchForm(Request $request): string|View
     {
+        if ($request->method() === 'GET') {
+            return view('wiki.search');
+        }
+
         $query = $request->all()['query'];
+
+        if (empty($query)) {
+            return 'Ничего не передано';
+        }
+
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
         foreach ($wordIds as $wordId) {
             $test = Communication::query()->where('word_id', '=', $wordId->id)->get(['article_id', 'number_of_occurrences'])->all();
@@ -216,7 +225,7 @@ class TestController extends Controller
                 $articleTitles[] = $item->title;
             }
         }
-        dump($articleTitles);
+        return view('wiki.search');
     }
 
     public function test(): View
