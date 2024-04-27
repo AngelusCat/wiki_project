@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Wiki-parser</title>
+    @vite('resources/css/wiki.css')
 </head>
 <body>
     <button id="import">Импорт статей</button>

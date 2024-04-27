@@ -201,7 +201,8 @@ class TestController extends Controller
     public function searchForm(Request $request): string|View
     {
         if ($request->method() === 'GET') {
-            return view('wiki.search');
+            $newArticleTitles = [];
+            return view('wiki.search', compact('newArticleTitles'));
         }
 
         $query = $request->all()['query'];
@@ -226,7 +227,17 @@ class TestController extends Controller
                 $articleTitles[] = $item->title;
             }
         }
-        return view('wiki.search');
+
+        //$articleTitles = array_flip($articleTitles);
+
+        foreach ($articleTitles as $articleTitle) {
+            $result = Article::query()->where('title', '=', $articleTitle)->get(['content'])->all();
+            foreach ($result as $item) {
+                $newArticleTitles[$articleTitle] = $item->content;
+            }
+        }
+
+        return view('wiki.search', compact('newArticleTitles'));
     }
 
     public function test(): View
@@ -237,6 +248,12 @@ class TestController extends Controller
     public function test2(): View
     {
         return view('test2');
+    }
+
+    public function getContent($title)
+    {
+        $test = Article::query()->where('title', '=', $title)->get(['content'])->all()[0];
+        return $test->content;
     }
 
     //https://learn.javascript.ru/fetch
