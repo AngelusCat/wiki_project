@@ -12,11 +12,16 @@ use Illuminate\View\View;
 
 class TestController extends Controller
 {
+    public function index(): View
+    {
+        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
+        return view('index', compact('articles'));
+    }
     public function store(Request $request): ?View
     {
         if ($request->method() === 'GET') {
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
-            return view('index', compact('articles'));
+            return view('clean', compact('articles'));
         }
 
         $query = trim($request->all()['articleName']);
@@ -154,7 +159,7 @@ class TestController extends Controller
 
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
-        return view('index', compact('articles'));
+        return view('clean', compact('articles'));
 
         /**
          * exlimit
@@ -206,6 +211,7 @@ class TestController extends Controller
                 $articleTitles[] = $item->title;
             }
         }
+        dump($articleTitles);
     }
 
     public function test(): View

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 /*Route::get('/', [\App\Http\Controllers\TestController::class, 'index']);
 Route::post('/articles', [\App\Http\Controllers\TestController::class, 'store']);*/
 Route::match(['get', 'post'], '/', [\App\Http\Controllers\TestController::class, 'store']);
+Route::get('/index', [\App\Http\Controllers\TestController::class, 'index']);
 Route::get('/search', [\App\Http\Controllers\TestController::class, 'showSearch']);
 Route::post('/searchForm', [\App\Http\Controllers\TestController::class, 'searchForm']);
 Route::get('/test', [\App\Http\Controllers\TestController::class, 'test']);
