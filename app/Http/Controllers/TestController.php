@@ -28,6 +28,8 @@ class TestController extends Controller
             return view('wiki.import', compact('articles'));
         }
 
+        $start = microtime(true);
+
         $query = trim($request->all()['articleName']);
 
         if (empty($query)) {
@@ -104,9 +106,9 @@ class TestController extends Controller
             $size += strlen($word);
         }
 
-        //$kbyte = 1024;
+        $kbyte = 1024;
 
-        //$size = (int) round($size/$kbyte);
+        $kbSize = (int) round($size/$kbyte);
 
         //Посчитать количество вхождений каждого слова-атома
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
@@ -163,7 +165,13 @@ class TestController extends Controller
 
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
-        return view('wiki.import', compact('articles'));
+        //Преобразовать в переменную для вывода в результате обработки
+        //echo 'Время выполнения скрипта: '.round(microtime(true) - $start, 4).' сек.';
+
+        //мб здесь нужно не подключать Вид, а делать редирект на экшен, который возвращает этот вид, отдавая
+        //ему в параметрах url нужные переменные
+
+        return view('wiki.import', compact('articles', 'link', 'kbSize', 'numberOfWordsInArticle'));
 
         /**
          * exlimit
