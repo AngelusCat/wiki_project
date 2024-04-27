@@ -13,7 +13,7 @@
         </p>
     </div>
 <script>
-    const button = document.getElementById('myButton');
+/*    const button = document.getElementById('myButton');
     const div = document.getElementById('myDiv');
     function changeContent()
     {
@@ -21,11 +21,28 @@
     }
     button.addEventListener('click', function () {
         let promise = fetch('/test2');
-        promise.then(response => {
-            let promise2 = response.json();
-            alert(promise2);
+        promise.then(response, function() {
+            div.innerHTML = response;
+        });
+        });*/
+
+const button = document.getElementById('myButton');
+const div = document.getElementById('myDiv');
+
+button.addEventListener('click', function () {
+    fetch('/test2').then(function (response) {
+        response.text().then(function (text) {
+            div.innerHTML = text;
         });
     });
+});
+
+/*    fetch(url).then(function (response) {
+        response.text().then(function (text) {
+            poemDisplay.textContent = text;
+        });
+    });*/
+
 </script>
 </body>
 </html>
