@@ -12,6 +12,11 @@ use Illuminate\View\View;
 
 class TestController extends Controller
 {
+    public function clean(): View
+    {
+        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
+        return view('clean', compact('articles'));
+    }
     public function index(): View
     {
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
