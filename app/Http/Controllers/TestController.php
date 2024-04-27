@@ -166,7 +166,7 @@ class TestController extends Controller
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
         //Преобразовать в переменную для вывода в результате обработки
-        //echo 'Время выполнения скрипта: '.round(microtime(true) - $start, 4).' сек.';
+        echo 'Время выполнения скрипта: '.round(microtime(true) - $start, 4).' сек.';
 
         //мб здесь нужно не подключать Вид, а делать редирект на экшен, который возвращает этот вид, отдавая
         //ему в параметрах url нужные переменные
