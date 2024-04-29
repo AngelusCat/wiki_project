@@ -21,7 +21,7 @@ class WikiParserController extends Controller
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
         return view('wiki.importHTMLCode', compact('articles'));
     }
-    public function store(Request $request): ?View
+    public function import(Request $request): ?View
     {
         if ($request->method() === 'GET') {
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
@@ -47,7 +47,7 @@ class WikiParserController extends Controller
             "explaintext" => 1,
             "format" => "json"
         ]);
-        
+
         $articleContent = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
         $pages = $articleContent['query']['pages'];
         $key = array_key_last($pages);
@@ -97,7 +97,7 @@ class WikiParserController extends Controller
 
         $kbyte = 1024;
 
-        $kbSize = (int) round($size/$kbyte);
+        $size = (int) round($size/$kbyte);
 
         //Посчитать количество вхождений каждого слова-атома
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
@@ -125,7 +125,7 @@ class WikiParserController extends Controller
             $article = new Article();
             $article->title = $query;
             $article->link = $link;
-            $article->size = $kbSize;
+            $article->size = $size;
             $article->word_count = $numberOfWordsInArticle;
             $article->content = $articleContent;
             $article->save();
@@ -160,58 +160,17 @@ class WikiParserController extends Controller
         //мб здесь нужно не подключать Вид, а делать редирект на экшен, который возвращает этот вид, отдавая
         //ему в параметрах url нужные переменные
 
-        return view('wiki.import', compact('articles', 'link', 'kbSize', 'numberOfWordsInArticle', 'time'));
-
-
-        /**
-         * exlimit
-         * explaintext
-         * exsectionformat
-         */
-
-        /**
-         * Тип данных для хранения статей: MEDIUMTEXT
-         */
-
-        /**
-         * Если в слове присутствует буква с ударением (пример: Миха́йлович), то заменить ее на обычную.
-         * Копировать только слова, без пробелов и знаков препинания
-         */
-
-        /**
-         * [^а-яёА-ЯЁ0-9]+
-         * (А́|а́|Е́|е́|И́|и́|О́|о́|У́|у́|Ы́|ы́|Э́|э́|Ю́|ю́|Я́|я́)
-         */
-
-        //http://www.mysql.ru/docs/man/Using_InnoDB_tables.html
-
-        //ENGINE=InnoDB CHARACTER SET utf8;
-
-        //https://www.mediawiki.org/wiki/API:Get_the_contents_of_a_page
-        //https://www.mediawiki.org/wiki/Extension:TextExtracts#API
+        return view('wiki.import', compact('articles', 'link', 'size', 'numberOfWordsInArticle', 'time'));
     }
 
-/*    public function showSearch(): View
-    {
-        return view('search');
-    }*/
-
-
-
-    public function searchForm(Request $request): string|View
+    public function search(Request $request): View
     {
         if ($request->method() === 'GET') {
-            $newArticleTitles = [];
-            return view('wiki.search', compact('newArticleTitles'));
+            $contentsOfArticles = [];
+            return view('wiki.search', compact('contentsOfArticles'));
         }
 
         $query = $request->all()['query'];
-
-/*        if (empty($query)) {
-            return 'Ничего не передано';
-        }*/
-
-        //Сделать проверку, что если нет такого слова в БД, то прекратить поиск
 
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
 
@@ -234,39 +193,19 @@ class WikiParserController extends Controller
             }
         }
 
-        //$articleTitles = array_flip($articleTitles);
-
         foreach ($articleTitles as $articleTitle) {
             $result = Article::query()->where('title', '=', $articleTitle)->get(['content'])->all();
             foreach ($result as $item) {
-                $newArticleTitles[$articleTitle] = $item->content;
+                $contentsOfArticles[$articleTitle] = $item->content;
             }
         }
 
-        return view('wiki.search', compact('newArticleTitles'));
+        return view('wiki.search', compact('contentsOfArticles'));
     }
 
-    public function test(): View
+    public function getArticleContent($title): string
     {
-        return view('test');
+        $articleContent = Article::query()->where('title', '=', $title)->get(['content'])->all()[0];
+        return $articleContent->content;
     }
-
-    public function test2(): View
-    {
-        return view('test2');
-    }
-
-    public function getContent($title)
-    {
-        $test = Article::query()->where('title', '=', $title)->get(['content'])->all()[0];
-        return $test->content;
-    }
-
-    //https://learn.javascript.ru/fetch
-    //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    //https://habr.com/ru/articles/14246/
-    //http://javascript.ru/ajax/intro
-    //https://codepen.io/turngait/post/ajax-js
-    //https://developer.mozilla.org/ru/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
-    //https://learn.javascript.ru/ui
 }
