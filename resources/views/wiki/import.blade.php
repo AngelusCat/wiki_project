@@ -1,5 +1,5 @@
 @extends('layouts.main')
 
 @section('content')
-@include('wiki.import2')
+    @include('wiki.importHTMLCode')
 @endsection

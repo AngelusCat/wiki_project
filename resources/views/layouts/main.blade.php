@@ -17,14 +17,14 @@
         const div = document.getElementById('content');
 
         buttonImport.addEventListener('click', function () {
-            fetch('/import').then(function (response) {
+            fetch('/importHTMLCode').then(function (response) {
                 response.text().then(function (text) {
                     div.innerHTML = text;
                 });
             });
         });
         buttonSearch.addEventListener('click', function () {
-            fetch('/showSearch').then(function (response) {
+            fetch('/searchHTMLCode').then(function (response) {
                 response.text().then(function (text) {
                     div.innerHTML = text;
                 });

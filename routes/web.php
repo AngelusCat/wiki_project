@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::match(['get', 'post'], '/', [\App\Http\Controllers\TestController::class, 'store']);
-Route::match(['get', 'post'], '/search', [\App\Http\Controllers\TestController::class, 'searchForm']);
-Route::get('/import', [\App\Http\Controllers\TestController::class, 'import']);
-Route::get('/showSearch', [\App\Http\Controllers\TestController::class, 'search']);
-Route::get('/get/{title}', [\App\Http\Controllers\TestController::class, 'getContent']);
+Route::match(['get', 'post'], '/', [\App\Http\Controllers\WikiParserController::class, 'store']);
+Route::match(['get', 'post'], '/search', [\App\Http\Controllers\WikiParserController::class, 'searchForm']);
+Route::get('/importHTMLCode', [\App\Http\Controllers\WikiParserController::class, 'getImportHTMLCode']);
+Route::get('/searchHTMLCode', [\App\Http\Controllers\WikiParserController::class, 'getSearchHTMLCode']);
+Route::get('/get/{title}', [\App\Http\Controllers\WikiParserController::class, 'getContent']);

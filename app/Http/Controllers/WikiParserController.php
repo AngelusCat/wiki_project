@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
-class TestController extends Controller
+class WikiParserController extends Controller
 {
-    public function search(): View
+    public function getSearchHTMLCode(): View
     {
-        return view('wiki.search2');
+        return view('wiki.searchHTMLCode');
     }
-    public function import(): View
+    public function getImportHTMLCode(): View
     {
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
-        return view('wiki.import2', compact('articles'));
+        return view('wiki.importHTMLCode', compact('articles'));
     }
     public function store(Request $request): ?View
     {
@@ -32,19 +32,12 @@ class TestController extends Controller
 
         $query = trim($request->all()['articleName']);
 
-/*        if (empty($query)) {
-            echo 'Ничего не передано';
-            die;
-        }*/
-
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
             echo 'Статья с этим названием уже скопирована.';
             die;
         }
-
-        //Пробелы в названии заменять нижнем подчеркиванием
 
         $response = Http::get("https://ru.wikipedia.org/w/api.php", [
             "action" => "query",
@@ -53,12 +46,8 @@ class TestController extends Controller
             "titles" => $titles,
             "explaintext" => 1,
             "format" => "json"
-            //api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=Pet_door&explaintext=1&formatversion=2 [try in ApiSandbox]
         ]);
-
-        // Сделать проверку: найдена статья или нет, если нет, то сообщить об этом пользователю, иначе продолжить
-        // обработку
-
+        
         $articleContent = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
         $pages = $articleContent['query']['pages'];
         $key = array_key_last($pages);
