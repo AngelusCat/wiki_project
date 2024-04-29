@@ -21,17 +21,29 @@ class WikiParserController extends Controller
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
         return view('wiki.importHTMLCode', compact('articles'));
     }
-    public function import(Request $request): ?View
+    public function import(Request $request): View
     {
         if ($request->method() === 'GET') {
+            /**
+             * @var $articles array<int, Article> содержит массив объектов Модели Article
+             */
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
+
             return view('wiki.import', compact('articles'));
         }
 
+        /**
+         * @var $start float время начала выполнения скрипта
+         */
+
         $start = microtime(true);
 
-        $query = trim($request->all()['articleName']);
+        /**
+         * @var $query string содержит название статьи, которую пользователь хочет скопировать
+         */
 
+        $query = trim($request->all()['articleName']);
+        
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {

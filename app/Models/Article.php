@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int id
  * @property string title
  * @property string link
- * @property int size
+ * @property float size
  * @property int word_count
  * @property string content
  */
