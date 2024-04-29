@@ -10,12 +10,17 @@
 <br>
 <p>Найдена статья по адресу: {{ $link }}</p>
 <p>Время обработки: {{ $time }}</p>
-<p>Размер статьи: {{ $kbSize . 'kB'}}</p>
+<p>Размер статьи: {{ $size . 'kB'}}</p>
 <p>Количество слов: {{ $numberOfWordsInArticle }}</p>
 </div>
 @endif
 <br><br>
-
+@if(isset($errorWikiParserAlreadyCopied))
+    <p>{{ $errorWikiParserAlreadyCopied }}</p>
+@endif
+@if(isset($errorWikiParserNotFound))
+    <p>{{ $errorWikiParserNotFound }}</p>
+@endif
 <script>
     var form = document.getElementById('form');
     var params = new FormData(form);
