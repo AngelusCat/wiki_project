@@ -35,10 +35,7 @@ class WikiParserController extends Controller
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
-/*            $errorWikiParserAlreadyCopied = 'Статья с названием ' . $query . ' уже скопирована.';
-            $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
-            return view('wiki.import', compact('articles', 'errorWikiParserAlreadyCopied'));*/
-            die;
+            abort(404, 'Статья с названием ' . $query . ' уже скопирована');
         }
 
         $response = Http::get("https://ru.wikipedia.org/w/api.php", [
@@ -55,10 +52,7 @@ class WikiParserController extends Controller
         $key = array_key_last($pages);
 
         if (!array_key_exists('extract', $pages[$key]) || $pages[$key]['extract'] === '') {
-/*            $errorWikiParserNotFound = 'Система не нашла статью с названием ' . $query;
-            $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
-            return view('wiki.import', compact('articles', 'errorWikiParserNotFound'));*/
-            die;
+            abort(404, 'Статья с названием ' . $query . ' не найдена на сайте wikipedia.org');
         }
 
         $articleContent = $pages[$key]['extract'];
@@ -179,8 +173,7 @@ class WikiParserController extends Controller
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
 
         if (empty($wordIds)) {
-            echo 'Ничего не найдено';
-            die;
+            abort(404, 'WikiParser не содержит статей, в которых есть ключевое слово "' . $query . '".');
         }
 
         foreach ($wordIds as $wordId) {

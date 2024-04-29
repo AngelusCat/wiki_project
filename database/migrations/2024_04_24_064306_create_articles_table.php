@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 100);
             $table->string('link', 100);
-            $table->unsignedInteger('size');
+            $table->float('size', 6, 1);
             $table->unsignedInteger('word_count');
             $table->mediumText('content');
             $table->engine('InnoDB');

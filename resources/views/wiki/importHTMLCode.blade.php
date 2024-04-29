@@ -12,7 +12,7 @@
     <div class="processingResult">
         <p>Импорт завершен.</p><br>
         <p>Найдена статья по адресу: {{ $link }}</p>
-        <p>Время обработки: {{ $time }}</p>
+        <p>Время обработки: {{ $time . 'сек.'}}</p>
         <p>Размер статьи: {{ $size . 'kB'}}</p>
         <p>Количество слов: {{ $numberOfWordsInArticle }}</p>
     </div>
