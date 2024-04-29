@@ -101,7 +101,7 @@ class WikiParserController extends Controller
 
         $kbyte = 1024;
 
-        $size = (int) round($size/$kbyte);
+        $size = round($size/$kbyte, 1);
 
         //Посчитать количество вхождений каждого слова-атома
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
