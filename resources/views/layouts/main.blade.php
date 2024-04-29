@@ -3,6 +3,7 @@
 <head>
     <title>Wiki-parser</title>
     @vite('resources/css/wiki.css')
+    @vite('resources/js/main.js')
 </head>
 <body>
     <button id="import">Импорт статей</button>
@@ -11,7 +12,7 @@
     <div id="content">
         @yield('content')
     </div>
-    <script>
+{{--    <script>
         const buttonImport = document.getElementById('import');
         const buttonSearch = document.getElementById('search');
         const div = document.getElementById('content');
@@ -30,6 +31,6 @@
                 });
             });
         });
-    </script>
+    </script>--}}
 </body>
 </html>

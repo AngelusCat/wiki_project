@@ -35,9 +35,10 @@ class WikiParserController extends Controller
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
-            $errorWikiParserAlreadyCopied = 'Статья с названием ' . $query . ' уже скопирована.';
+/*            $errorWikiParserAlreadyCopied = 'Статья с названием ' . $query . ' уже скопирована.';
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
-            return view('wiki.import', compact('articles', 'errorWikiParserAlreadyCopied'));
+            return view('wiki.import', compact('articles', 'errorWikiParserAlreadyCopied'));*/
+            die;
         }
 
         $response = Http::get("https://ru.wikipedia.org/w/api.php", [
@@ -54,9 +55,10 @@ class WikiParserController extends Controller
         $key = array_key_last($pages);
 
         if (!array_key_exists('extract', $pages[$key]) || $pages[$key]['extract'] === '') {
-            $errorWikiParserNotFound = 'Система не нашла статью с названием ' . $query;
+/*            $errorWikiParserNotFound = 'Система не нашла статью с названием ' . $query;
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
-            return view('wiki.import', compact('articles', 'errorWikiParserNotFound'));
+            return view('wiki.import', compact('articles', 'errorWikiParserNotFound'));*/
+            die;
         }
 
         $articleContent = $pages[$key]['extract'];

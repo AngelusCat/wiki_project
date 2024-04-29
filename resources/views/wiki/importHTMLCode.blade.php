@@ -1,3 +1,4 @@
+@vite('resources/js/import.js')
 <form method="POST" id="form">
     @csrf
     <input type="text" name="articleName" required>
@@ -21,14 +22,14 @@
 @if(isset($errorWikiParserNotFound))
     <p>{{ $errorWikiParserNotFound }}</p>
 @endif
-<script>
+{{--<script>
     var form = document.getElementById('form');
     var params = new FormData(form);
     fetch('/', {
         method: 'POST',
         body: params
     });
-</script>
+</script>--}}
 <div>
     @if(!empty($articles))
         <table border="5">
@@ -37,7 +38,7 @@
                     <th>Название статьи</th>
                     <th>Ссылка</th>
                     <th>Размер статьи</th>
-                    <th>Кол-во статьи</th>
+                    <th>Кол-во слов</th>
                 </tr>
             </thead>
             <tbody>

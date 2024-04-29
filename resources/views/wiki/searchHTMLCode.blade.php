@@ -1,3 +1,4 @@
+@vite('resources/js/search.js')
 <form action="/search" method="POST">
     @csrf
     <input type="text" name="query" required>
@@ -11,7 +12,7 @@
 @endforeach
 @endif
 <div id="content2" class="test"></div>
-<script>
+{{--<script>
     const elem = document.querySelectorAll('a');
     const div2 = document.getElementById('content2');
     for ( let i = 0; i < elem.length; i++ ) {
@@ -25,4 +26,4 @@
             });
         });
     }
-</script>
+</script>--}}
