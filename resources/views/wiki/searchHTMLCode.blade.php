@@ -11,7 +11,7 @@
     <br>
 @endforeach
 @endif
-<div id="content2" class="test"></div>
+<div id="articleContent" class="articleContent"></div>
 {{--<script>
     const elem = document.querySelectorAll('a');
     const div2 = document.getElementById('content2');
