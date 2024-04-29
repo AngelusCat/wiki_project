@@ -6,7 +6,7 @@
 <br><br>
 @if(!empty($newArticleTitles))
 @foreach($newArticleTitles as $title => $content)
-    <a href="#" name="{{ $title }}">{{$title}}</a>
+    <a href="javascript:void(0);" name="{{ $title }}">{{$title}}</a>
     <br>
 @endforeach
 @endif
