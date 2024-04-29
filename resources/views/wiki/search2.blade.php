@@ -1,6 +1,6 @@
 <form action="/search" method="POST">
     @csrf
-    <input type="text" name="query">
+    <input type="text" name="query" required>
     <input type="submit" value="Найти">
 </form>
 <br><br>
@@ -10,21 +10,7 @@
     <br>
 @endforeach
 @endif
-<div id="content2" class="test">
-
-</div>
-{{--
-<script>
-    var elem = document.querySelectorAll('a');
-    var result = document.getElementById('content');
-
-    for ( var i = 0; i < elem.length; i++ ) { // пробегаемся по всем найденным ссылкам
-        elem[i].addEventListener( 'click',(function (e){ // действие при клике
-            e.preventDefault(); // Отменяем переход по ссылке
-            result = this.innerHTML; // вставляем содержимое ссылки в инпут
-        }));
-    }
-</script>--}}
+<div id="content2" class="test"></div>
 <script>
     //elem.getAttribute(name)
     const elem = document.querySelectorAll('a');

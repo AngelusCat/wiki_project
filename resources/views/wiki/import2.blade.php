@@ -1,18 +1,19 @@
 <form method="POST" id="form">
     @csrf
-    <input type="text" name="articleName">
+    <input type="text" name="articleName" required>
     <input type="submit" value="Скопировать">
 </form>
 <br><br>
-
+@if(isset($link))
 <div style="background-color: #cbd5e0">
 <p>Импорт завершен.</p>
 <br>
-<p>Найдена статья по адресу: </p>
-<p>Время обработки: </p>
-<p>Размер статьи: </p>
-<p>Количество слов</p>
+<p>Найдена статья по адресу: {{ $link }}</p>
+<p>Время обработки: {{ $time }}</p>
+<p>Размер статьи: {{ $kbSize . 'kB'}}</p>
+<p>Количество слов: {{ $numberOfWordsInArticle }}</p>
 </div>
+@endif
 <br><br>
 
 <script>
@@ -24,7 +25,7 @@
     });
 </script>
 <div>
-    @if(isset($articles))
+    @if(!empty($articles))
         <table border="5">
             <thead>
                 <tr>
@@ -39,7 +40,7 @@
                     <tr>
                         <td @class(['test2' => $loop->even])>{{$article->title}}</td>
                         <td @class(['test2' => $loop->even])>{{$article->link}}</td>
-                        <td @class(['test2' => $loop->even])>{{$article->size}}</td>
+                        <td @class(['test2' => $loop->even])>{{$article->size . 'kB'}}</td>
                         <td @class(['test2' => $loop->even])>{{$article->word_count}}</td>
                     </tr>
                 @endforeach

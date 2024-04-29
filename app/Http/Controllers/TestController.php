@@ -24,7 +24,7 @@ class TestController extends Controller
     public function store(Request $request): ?View
     {
         if ($request->method() === 'GET') {
-            $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
+            $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
             return view('wiki.import', compact('articles'));
         }
 
@@ -32,10 +32,10 @@ class TestController extends Controller
 
         $query = trim($request->all()['articleName']);
 
-        if (empty($query)) {
+/*        if (empty($query)) {
             echo 'Ничего не передано';
             die;
-        }
+        }*/
 
         $titles = str_replace(' ', '_', $query);
 
@@ -136,7 +136,7 @@ class TestController extends Controller
             $article = new Article();
             $article->title = $query;
             $article->link = $link;
-            $article->size = $size;
+            $article->size = $kbSize;
             $article->word_count = $numberOfWordsInArticle;
             $article->content = $articleContent;
             $article->save();
@@ -166,12 +166,12 @@ class TestController extends Controller
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
         //Преобразовать в переменную для вывода в результате обработки
-        echo 'Время выполнения скрипта: '.round(microtime(true) - $start, 4).' сек.';
+        $time = round(microtime(true) - $start, 4);
 
         //мб здесь нужно не подключать Вид, а делать редирект на экшен, который возвращает этот вид, отдавая
         //ему в параметрах url нужные переменные
 
-        return view('wiki.import', compact('articles', 'link', 'kbSize', 'numberOfWordsInArticle'));
+        return view('wiki.import', compact('articles', 'link', 'kbSize', 'numberOfWordsInArticle', 'time'));
 
 
         /**
@@ -218,13 +218,19 @@ class TestController extends Controller
 
         $query = $request->all()['query'];
 
-        if (empty($query)) {
+/*        if (empty($query)) {
             return 'Ничего не передано';
-        }
+        }*/
 
         //Сделать проверку, что если нет такого слова в БД, то прекратить поиск
 
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
+
+        if (empty($wordIds)) {
+            echo 'Ничего не найдено';
+            die;
+        }
+
         foreach ($wordIds as $wordId) {
             $test = Communication::query()->where('word_id', '=', $wordId->id)->get(['article_id', 'number_of_occurrences'])->all();
             foreach ($test as $item) {
