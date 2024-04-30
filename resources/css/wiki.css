@@ -1,27 +1,28 @@
 .processingResult {
-    background-color: yellowgreen;
+    background-color: #a0aec0;
     width: 400px;
     height: 250px;
-    border: 5px solid teal;
+    border: 3px solid black;
     padding: 10px;
 }
 
 .articleContent {
-    width: 500px;
-    word-break: break-all;
-    position: absolute;
-    left: 300px;
+    width: 1200px;
+    position: relative;
+    left: 250px;
+    bottom: 70px;
+    background-color: #a0aec0;
 }
 
 th {
-    background-color: yellowgreen;
+    background-color: #a0aec0;
 }
 
 table {
-    border-color: teal;
+    border-color: #1a202c;
     border-collapse: collapse;
 }
 
 .lineСolor {
-    background-color: yellowgreen;
+    background-color: #a0aec0;
 }

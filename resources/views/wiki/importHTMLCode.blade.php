@@ -22,7 +22,7 @@
 
 <div>
     @if(!empty($articles))
-        <table border="5">
+        <table border="3">
             <thead>
                 <tr>
                     <th>Название статьи</th>
