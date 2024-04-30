@@ -253,14 +253,16 @@ class WikiParserController extends Controller
             }
         }
 
-        foreach ($articleTitles as $articleTitle) {
+/*        foreach ($articleTitles as $articleTitle) {
             $result = Article::query()->where('title', '=', $articleTitle)->get(['content'])->all();
             foreach ($result as $item) {
                 $contentsOfArticles[$articleTitle] = $item->content;
             }
-        }
+        }*/
 
-        return view('wiki.search', compact('contentsOfArticles'));
+        
+
+        return view('wiki.search', compact('articleTitles'));
     }
 
     public function getArticleContent($title): string

@@ -8,10 +8,15 @@
 
 <br><br>
 
-@if(!empty($contentsOfArticles))
+{{--@if(!empty($contentsOfArticles))
     @foreach($contentsOfArticles as $title => $content)
         <a href="#" name="{{ $title }}">{{$title}}</a><br>
     @endforeach
-@endif
+@endif--}}
+@isset($articleTitles)
+    @foreach($articleTitles as $articleTitle)
+        <a href="#" name="{{ $articleTitle }}">{{ $articleTitle }}</a><br>
+    @endforeach
+@endisset
 
 <div id="articleContent" class="articleContent"></div>
