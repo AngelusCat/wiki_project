@@ -230,34 +230,46 @@ class WikiParserController extends Controller
             return view('wiki.search');
         }
 
+        /**
+         * @var string $query ключевое слово
+         */
         $query = $request->all()['query'];
-        dd($query);
 
+        /**
+         * @var array<int, WordAtom> $wordIds массив объектов Модели WordAtom
+         */
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
+
 
         if (empty($wordIds)) {
             abort(404, 'WikiParser не содержит статей, в которых есть ключевое слово "' . $query . '".');
         }
 
         foreach ($wordIds as $wordId) {
-            $test = Communication::query()->where('word_id', '=', $wordId->id)->get(['article_id', 'number_of_occurrences'])->all();
-            foreach ($test as $item) {
-                $articleIds[$item->article_id] = $item->number_of_occurrences;
+            /**
+             * @var array<int, Communication> $articleInformation массив объектов Модели Communications
+             */
+            $articleInformation = Communication::query()->where('word_id', '=', $wordId->id)->get(['article_id', 'number_of_occurrences'])->all();
+
+            foreach ($articleInformation as $article) {
+                $articleIds[$article->article_id] = $article->number_of_occurrences;
             }
         }
         arsort($articleIds);
         foreach ($articleIds as $articleId => $numberOfOccurrences) {
-            $test2 = Article::query()->where('id', '=', $articleId)->get('title')->all();
-            foreach ($test2 as $item) {
-                $articleTitles[] = $item->title;
+            $articleTitle = Article::query()->where('id', '=', $articleId)->get('title')->all();
+            foreach ($articleTitle as $article) {
+                $articleTitles[] = $article->title;
             }
         }
-
         return view('wiki.search', compact('articleTitles'));
     }
 
-    public function getArticleContent($title): string
+    public function getArticleContent(string $title): string
     {
+        /**
+         * @var Article $articleContent объект Модели Article
+         */
         $articleContent = Article::query()->where('title', '=', $title)->get(['content'])->all()[0];
         return $articleContent->content;
     }
