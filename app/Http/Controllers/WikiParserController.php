@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Communication;
 use App\Models\WordAtom;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
@@ -25,7 +26,7 @@ class WikiParserController extends Controller
     {
         if ($request->method() === 'GET') {
             /**
-             * @var $articles array<int, Article> содержит массив объектов Модели Article
+             * @var array<int, Article> $articles массив объектов Модели Article
              */
             $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
 
@@ -33,23 +34,27 @@ class WikiParserController extends Controller
         }
 
         /**
-         * @var $start float время начала выполнения скрипта
+         * @var  float $start время начала выполнения скрипта
          */
-
         $start = microtime(true);
 
         /**
-         * @var $query string содержит название статьи, которую пользователь хочет скопировать
+         * @var string $query название статьи
          */
-
         $query = trim($request->all()['articleName']);
 
+        /**
+         * @var string $titles название статьи с подчеркиванием вместо пробела
+         */
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
             abort(404, 'Статья с названием ' . $query . ' уже скопирована');
         }
 
+        /**
+         * @var \Illuminate\Http\Client\Response $response ответ MediaWiki API
+         */
         $response = Http::get("https://ru.wikipedia.org/w/api.php", [
             "action" => "query",
             "prop" => "extracts",
@@ -59,16 +64,33 @@ class WikiParserController extends Controller
             "format" => "json"
         ]);
 
+        /**
+         * @var array $articleContent информация о запросе в виде массива
+         */
         $articleContent = json_decode($response->body(), JSON_OBJECT_AS_ARRAY);
+
+        /**
+         * @var array $pages для облегчения работы с многомерным массивом
+         */
         $pages = $articleContent['query']['pages'];
+
+        /**
+         * @var mixed $key получить доступ к нужному массиву
+         */
         $key = array_key_last($pages);
 
         if (!array_key_exists('extract', $pages[$key]) || $pages[$key]['extract'] === '') {
             abort(404, 'Статья с названием ' . $query . ' не найдена на сайте wikipedia.org');
         }
 
+        /**
+         * @var string $articleContent содержимое статьи
+         */
         $articleContent = $pages[$key]['extract'];
 
+        /**
+         * @var array $replacementArray для замены символов с ударением на аналогичные символы без него
+         */
         $replacementArray = [
             "А́" => "А",
             "а́" => "а",
@@ -89,16 +111,22 @@ class WikiParserController extends Controller
             "Я́" => "Я",
             "я́" => "я"
         ];
-        //Заменяет буквы с ударением на их аналоги без ударения
+
+        /**
+         * @var string $articleContent содержимое статьи без символов с ударением
+         */
         $articleContent = strtr($articleContent, $replacementArray);
 
-        //Получить ссылку на статью
+        /**
+         * @var string $link ссылка на статью в wiki
+         */
         $link = 'https://ru.wikipedia.org/wiki/' . $titles;
 
-        //Разбить текст статьи на слова-атомы
+        /**
+         * @var array $wordsAtoms слова-атомы
+         */
         $wordsAtoms = preg_split('/[^а-яёА-ЯЁ0-9a-zA-Z]+/u', mb_strtolower($articleContent), -1, PREG_SPLIT_NO_EMPTY);
 
-        //Посчитать размер
         $size = 0;
 
         foreach ($wordsAtoms as $word) {
@@ -107,22 +135,40 @@ class WikiParserController extends Controller
 
         $kbyte = 1024;
 
+        /**
+         * @var float $size размер статьи в кб
+         */
         $size = round($size/$kbyte, 1);
 
-        //Посчитать количество вхождений каждого слова-атома
+        /**
+         * @var array<string, int> $numberOfOccurrencesOfWord количество вхождений слов-атомов
+         */
         $numberOfOccurrencesOfWord = array_count_values($wordsAtoms);
 
-        //Убрать повторяющиеся значения в массиве со словами-атомами
+        /**
+         * @var array<int, string> $wordsAtoms массив слов-атомов без повторяющихся значений
+         */
         $wordsAtoms = array_unique($wordsAtoms);
 
+        /**
+         * @var array<int, string> $wordsAtoms массив слов-атомов с последовательными ключами
+         */
         $wordsAtoms = array_values($wordsAtoms);
 
-        //Посчитать количество слов в статье
+        /**
+         * @var int $numberOfWordsInArticle количество слов в статье
+         */
         $numberOfWordsInArticle = array_sum($numberOfOccurrencesOfWord);
+
+        /**
+         * @var array<int, int> $numberOfOccurrencesOfWord количество вхождений слов-атомов с ключами-числами
+         */
 
         $numberOfOccurrencesOfWord = array_values($numberOfOccurrencesOfWord);
 
-        //Получить максимальный id в таблице words_atoms до вставки новых записей
+        /**
+         * @var int $oldMaxId максимальный id в таблице words_atoms до вставки новых записей в эту таблицу
+         */
         $oldMaxId = WordAtom::query()->count();
 
         foreach ($wordsAtoms as $word) {
@@ -142,7 +188,9 @@ class WikiParserController extends Controller
 
             DB::statement("LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.1/Uploads/wordsAtoms.txt' IGNORE INTO TABLE words_atoms (id, word)");
 
-            //Получить максимальный id в таблице words_atoms после вставки новых записей
+            /**
+             * @var int $newMaxId максимальный id в таблице words_atoms после вставки новых записей в эту таблицу
+             */
             $newMaxId = WordAtom::query()->count();
 
             for ($i = $oldMaxId+1, $a = 0; $i <= $newMaxId, $a < count($numberOfOccurrencesOfWord); $i++, $a++) {
@@ -162,15 +210,18 @@ class WikiParserController extends Controller
 
         DB::statement("ALTER TABLE words_atoms AUTO_INCREMENT = $newMaxId");
 
+        /**
+         * @var \Illuminate\Database\Eloquent\Collection $articles коллекция объектов Модели Article
+         */
+
         $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
 
-        //Преобразовать в переменную для вывода в результате обработки
-        $time = round(microtime(true) - $start, 4);
+        /**
+         * @var float $end время конца выполнения скрипта
+         */
+        $end = round(microtime(true) - $start, 4);
 
-        //мб здесь нужно не подключать Вид, а делать редирект на экшен, который возвращает этот вид, отдавая
-        //ему в параметрах url нужные переменные
-
-        return view('wiki.import', compact('articles', 'link', 'size', 'numberOfWordsInArticle', 'time'));
+        return view('wiki.import', compact('articles', 'link', 'size', 'numberOfWordsInArticle', 'end'));
     }
 
     public function search(Request $request): View
