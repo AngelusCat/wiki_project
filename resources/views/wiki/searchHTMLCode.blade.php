@@ -14,4 +14,6 @@
     @endforeach
 @endisset
 
-<div id="articleContent" class="articleContent"></div>
+<div class="articleContent">
+    <pre id="articleContent"></pre>
+</div>
