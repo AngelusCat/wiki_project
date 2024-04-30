@@ -227,11 +227,11 @@ class WikiParserController extends Controller
     public function search(Request $request): View
     {
         if ($request->method() === 'GET') {
-            $contentsOfArticles = [];
-            return view('wiki.search', compact('contentsOfArticles'));
+            return view('wiki.search');
         }
 
         $query = $request->all()['query'];
+        dd($query);
 
         $wordIds = WordAtom::query()->where('word', '=', $query)->get('id')->all();
 
@@ -252,15 +252,6 @@ class WikiParserController extends Controller
                 $articleTitles[] = $item->title;
             }
         }
-
-/*        foreach ($articleTitles as $articleTitle) {
-            $result = Article::query()->where('title', '=', $articleTitle)->get(['content'])->all();
-            foreach ($result as $item) {
-                $contentsOfArticles[$articleTitle] = $item->content;
-            }
-        }*/
-
-        
 
         return view('wiki.search', compact('articleTitles'));
     }
