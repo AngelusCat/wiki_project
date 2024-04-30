@@ -19,7 +19,7 @@ class WikiParserController extends Controller
     }
     public function getImportHTMLCode(): View
     {
-        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
+        $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
         return view('wiki.importHTMLCode', compact('articles'));
     }
     public function import(Request $request): View
@@ -214,7 +214,7 @@ class WikiParserController extends Controller
          * @var \Illuminate\Database\Eloquent\Collection $articles коллекция объектов Модели Article
          */
 
-        $articles = Article::query()->get(['title', 'link', 'size', 'word_count']);
+        $articles = Article::query()->get(['title', 'link', 'size', 'word_count'])->all();
 
         /**
          * @var float $end время конца выполнения скрипта
