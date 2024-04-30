@@ -43,7 +43,7 @@ class WikiParserController extends Controller
          */
 
         $query = trim($request->all()['articleName']);
-        
+
         $titles = str_replace(' ', '_', $query);
 
         if (Article::query()->where('title', '=', $query)->count() !== 0) {
