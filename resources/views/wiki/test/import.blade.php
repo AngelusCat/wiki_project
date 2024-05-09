@@ -28,4 +28,6 @@
         await updateTableWithArticles();
     }
     updateTableWithArticles();
+    //Сделать время между запросами короче.
+    //Сделать обработку ошибок
 </script>

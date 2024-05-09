@@ -216,6 +216,6 @@ class TestController extends Controller
          */
         $end = round(microtime(true) - $start, 4);
 
-        //return redirect('/');
+        return redirect('/');
     }
 }
