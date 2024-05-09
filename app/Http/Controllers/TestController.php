@@ -226,6 +226,6 @@ class TestController extends Controller
             dump($e->getMessage());
         }
 
-        return redirect('/');
+        return view('wiki.test.index', compact('article'));
     }
 }
