@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->string('link', 100);
             $table->float('size', 6, 1);
+            $table->float('time_of_processing', 6, 2)->nullable();
             $table->unsignedInteger('word_count');
             $table->mediumText('content');
             $table->engine('InnoDB');

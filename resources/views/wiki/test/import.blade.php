@@ -8,7 +8,13 @@
 
 {{--Результат обработки--}}
 <div>
-
+{{--    @if ($article !== '')
+        <p>Импорт завершен</p><br>
+        <p>Найдена статья по адресу: {{ $article->link }}</p><br>
+        <p>Время обработки: {{ $article->time_of_processing }}</p><br>
+        <p>Размер статьи: {{ $article->size }}</p><br>
+        <p>Количество слов: {{ $article->word_count }}</p><br>
+    @endif--}}
 </div>
 
 {{--Таблица--}}

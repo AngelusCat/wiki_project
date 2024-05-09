@@ -216,6 +216,16 @@ class TestController extends Controller
          */
         $end = round(microtime(true) - $start, 4);
 
+        try {
+            DB::beginTransaction();
+            $article->time_of_processing = $end;
+            $article->save();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dump($e->getMessage());
+        }
+
         return redirect('/');
     }
 }

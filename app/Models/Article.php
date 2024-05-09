@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string link
  * @property float size
+ * @property float time_of_processing
  * @property int word_count
  * @property string content
  */
