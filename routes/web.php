@@ -8,3 +8,8 @@ Route::get('/importHTMLCode', [\App\Http\Controllers\WikiParserController::class
 Route::get('/searchHTMLCode', [\App\Http\Controllers\WikiParserController::class, 'getSearchHTMLCode']);
 Route::get('/getArticleContent/{title}', [\App\Http\Controllers\WikiParserController::class, 'getArticleContent'])->where(['title' => '.*']);*/
 
+Route::get('/', [\App\Http\Controllers\TestController::class, 'index']);
+Route::get('/importHTML', [\App\Http\Controllers\TestController::class, 'getImportHTML']);
+Route::get('/searchHTML', [\App\Http\Controllers\TestController::class, 'getSearchHTML']);
+Route::get('/getTable', [\App\Http\Controllers\TestController::class, 'getTable']);
+Route::post('/saveArticle', [\App\Http\Controllers\TestController::class, 'store']);
