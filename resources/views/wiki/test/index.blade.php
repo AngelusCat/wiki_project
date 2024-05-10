@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Wiki-parser</title>
+    @vite(['resources/js/test/index.js'])
 </head>
 <body>
     <button id="importTab">Импорт статей</button>
@@ -10,7 +11,7 @@
     <div id="content">
         @include('wiki.test.import')
     </div>
-    <script>
+{{--    <script>
         let importTab = document.getElementById('importTab');
         let searchTab = document.getElementById('searchTab');
         let content = document.getElementById('content');
@@ -29,6 +30,6 @@
                 });
             });
         });
-    </script>
+    </script>--}}
 </body>
 </html>

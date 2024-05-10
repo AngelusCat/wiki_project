@@ -1,4 +1,4 @@
-
+@vite(['resources/js/test/import.js'])
 {{--Форма--}}
 <form action="/saveArticle" method="POST">
     @csrf
@@ -9,7 +9,7 @@
 {{--Результат обработки--}}
 <div>
     @isset($article)
-        
+
     @endisset
 </div>
 
@@ -19,17 +19,17 @@
 </div>
 
 
-<script>
+{{--<script>
     let table = document.getElementById('table');
 
     async function updateTableWithArticles() {
         let response = await fetch('/getTable');
         let tableText = await response.text();
         table.innerHTML = tableText;
-        await new Promise(resolve => setTimeout(resolve, 50000));
+        await new Promise(resolve => setTimeout(resolve, 20000));
         await updateTableWithArticles();
     }
     updateTableWithArticles();
     //Сделать время между запросами короче.
     //Сделать обработку ошибок
-</script>
+</script>--}}
