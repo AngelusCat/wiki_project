@@ -5,6 +5,12 @@ async function updateTableWithArticles() {
     let tableText = await response.text();
     table.innerHTML = tableText;
     await new Promise(resolve => setTimeout(resolve, 20000));
-    await updateTableWithArticles();
+    if (flag) {
+        await updateTableWithArticles();
+    }
+
 }
-updateTableWithArticles();
+
+if (flag) {
+    updateTableWithArticles();
+}
