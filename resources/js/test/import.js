@@ -9,7 +9,12 @@ async function updateTableWithArticles() {
         await updateTableWithArticles();
     }
 
+
+
+
 }
+
+import {flag} from "@/test/index";
 
 if (flag) {
     updateTableWithArticles();

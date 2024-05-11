@@ -4,7 +4,7 @@ let content = document.getElementById('content');
 
 let children = content.children;
 let childrenArray = Array.prototype.slice.call(children);
-let flag = false;
+export let flag = false;
 
 for (let elem of childrenArray) {
     let id = elem.id;
